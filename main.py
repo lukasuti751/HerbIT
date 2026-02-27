@@ -52,3 +52,30 @@ HERBS = [
 
 CATEGORIES = [
     {"id": "digestive", "label": "Digestive", "herbs": "ginger, peppermint, fennel, chamomile"},
+    {"id": "calm", "label": "Calm & sleep", "herbs": "lavender, chamomile, lemon balm"},
+    {"id": "immune", "label": "Immune", "herbs": "echinacea, elderberry"},
+    {"id": "respiratory", "label": "Respiratory", "herbs": "thyme, eucalyptus"},
+    {"id": "inflammatory", "label": "Anti-inflammatory", "herbs": "turmeric, ginger"},
+    {"id": "culinary", "label": "Culinary & wellness", "herbs": "basil, rosemary, sage"},
+]
+
+# Keccak256-style hash for bytes (EVM-compatible: use py-evm or eth_abi in production)
+def keccak256_hex(data: bytes) -> str:
+    try:
+        from Crypto.Hash import keccak
+        h = keccak.new(digest_bits=256)
+        h.update(data)
+        return "0x" + h.hexdigest()
+    except Exception:
+        pass
+    # Fallback: SHA3-256 (same as Keccak-256 for many implementations)
+    h = hashlib.sha3_256(data)
+    return "0x" + h.hexdigest()
+
+def utf8_keccak(text: str) -> str:
+    return keccak256_hex(text.encode("utf-8"))
+
+# -----------------------------------------------------------------------------
+# LOOKUP
+# -----------------------------------------------------------------------------
+

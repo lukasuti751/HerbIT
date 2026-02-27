@@ -322,3 +322,26 @@ def main() -> int:
     sub.add_parser("stats", help="Herb and category stats").set_defaults(func=cmd_stats)
     sub.add_parser("demo", help="Run a short demo").set_defaults(func=cmd_demo)
     sub.add_parser("remedies", help="List remedy ideas (title and herbs)").set_defaults(func=cmd_remedies)
+    sub.add_parser("interactive", help="Interactive REPL").set_defaults(func=cmd_interactive)
+
+    suggest_p = sub.add_parser("suggest", help="Suggest herbs for a symptom or keyword")
+    suggest_p.add_argument("symptom", type=str, nargs="?", default="", help="Symptom or keyword")
+    suggest_p.add_argument("--symptom", type=str, dest="symptom_opt", help="Alternative: --symptom value")
+    suggest_p.set_defaults(func=cmd_suggest)
+
+    export_p = sub.add_parser("export-hashes", help="Export name/benefit/category hashes for a herb")
+    export_p.add_argument("--name", type=str, required=True, help="Herb name")
+    export_p.add_argument("--benefit", type=str, required=True, help="Benefit description")
+    export_p.add_argument("--category", type=str, required=True, help="Category (e.g. Digestive)")
+    export_p.add_argument("--file", type=str, help="Write JSON to file")
+    export_p.set_defaults(func=cmd_export_hashes)
+
+    args = p.parse_args()
+    if not args.command:
+        p.print_help()
+        return 0
+    return args.func(args)
+
+if __name__ == "__main__":
+    sys.exit(main())
+

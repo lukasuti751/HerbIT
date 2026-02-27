@@ -241,3 +241,30 @@ def cmd_suggest(args: argparse.Namespace) -> int:
 def cmd_export_hashes(args: argparse.Namespace) -> int:
     data = get_herb_hashes_for_ledger(args.name.strip(), args.benefit.strip(), args.category.strip())
     j = json.dumps(data, indent=2)
+    if args.file:
+        Path(args.file).write_text(j, encoding="utf-8")
+        print("Written to", args.file)
+    else:
+        print(j)
+    return 0
+
+def cmd_interactive(args: argparse.Namespace) -> int:
+    print("HerbIT interactive. Commands: lookup <name|benefit|category> <value>, list-herbs, list-categories, hash <text>, suggest <keyword>, quit")
+    while True:
+        try:
+            line = input("herbit> ").strip()
+            if not line:
+                continue
+            if line.lower() in ("quit", "exit", "q"):
+                break
+            parts = line.split(maxsplit=2)
+            cmd = parts[0].lower() if parts else ""
+            if cmd == "lookup" and len(parts) >= 3:
+                kind, value = parts[1].lower(), parts[2]
+                if kind == "name":
+                    for h in lookup_by_name(value):
+                        print(h)
+                elif kind == "benefit":
+                    for h in lookup_by_benefit(value):
+                        print(h)
+                elif kind == "category":

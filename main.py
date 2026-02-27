@@ -268,3 +268,30 @@ def cmd_interactive(args: argparse.Namespace) -> int:
                     for h in lookup_by_benefit(value):
                         print(h)
                 elif kind == "category":
+                    for h in lookup_by_category(value):
+                        print(h)
+                else:
+                    print("Use name, benefit, or category")
+            elif cmd == "list-herbs":
+                cmd_list_herbs(args)
+            elif cmd == "list-categories":
+                cmd_list_categories(args)
+            elif cmd == "hash" and len(parts) >= 2:
+                print(utf8_keccak(parts[1]))
+            elif cmd == "suggest" and len(parts) >= 2:
+                for h in suggest_for_symptom(parts[1]):
+                    print(h["name"], h["category"], h["tags"])
+            else:
+                print("Unknown or incomplete command. Try: lookup name Basil | list-herbs | hash Basil | suggest digestive")
+        except EOFError:
+            break
+        except KeyboardInterrupt:
+            print()
+            break
+    return 0
+
+# -----------------------------------------------------------------------------
+# MAIN
+# -----------------------------------------------------------------------------
+
+def main() -> int:

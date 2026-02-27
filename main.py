@@ -160,3 +160,30 @@ def cmd_hash(args: argparse.Namespace) -> int:
         return 1
     h = utf8_keccak(text)
     print(h)
+    return 0
+
+def cmd_hash_batch(args: argparse.Namespace) -> int:
+    names = [s.strip() for s in (args.names or "").split(",") if s.strip()]
+    benefits = [s.strip() for s in (args.benefits or "").split(",") if s.strip()]
+    categories = [s.strip() for s in (args.categories or "").split(",") if s.strip()]
+    out = {}
+    if names:
+        out["nameHashes"] = [utf8_keccak(n) for n in names]
+    if benefits:
+        out["benefitHashes"] = [utf8_keccak(b) for b in benefits]
+    if categories:
+        out["categoryHashes"] = [utf8_keccak(c) for c in categories]
+    print(json.dumps(out, indent=2))
+    return 0
+
+def cmd_config(args: argparse.Namespace) -> int:
+    cfg = {
+        "app": "HerbIT",
+        "herb_count": len(HERBS),
+        "category_count": len(CATEGORIES),
+        "hash_algorithm": "keccak256 (SHA3-256 fallback)",
+        "contract_note": "Herbo contract uses bytes32; compute hashes off-chain and pass to logHerbFree.",
+    }
+    print(json.dumps(cfg, indent=2))
+    return 0
+

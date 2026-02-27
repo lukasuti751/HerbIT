@@ -214,3 +214,30 @@ def cmd_stats(args: argparse.Namespace) -> int:
 
 def cmd_demo(args: argparse.Namespace) -> int:
     print("HerbIT demo — herb guide for natural and healthy living")
+    print("Lookup 'Ginger':", lookup_by_name("Ginger"))
+    print("Lookup benefit 'digestive':", [h["name"] for h in lookup_by_benefit("digestive")])
+    print("Hash of 'Basil':", utf8_keccak("Basil"))
+    print("Hash of 'Digestive support':", utf8_keccak("Digestive support"))
+    return 0
+
+def cmd_remedies(args: argparse.Namespace) -> int:
+    for r in REMEDY_IDEAS:
+        print(f"{r['title']}: {', '.join(r['herbs'])}")
+    return 0
+
+def cmd_suggest(args: argparse.Namespace) -> int:
+    symptom = (args.symptom_opt or getattr(args, "symptom", None) or "").strip()
+    if not symptom:
+        print("Provide symptom or keyword (e.g. suggest digestive)", file=sys.stderr)
+        return 1
+    results = suggest_for_symptom(symptom)
+    if not results:
+        print("No herbs found for that keyword.", file=sys.stderr)
+        return 1
+    for h in results:
+        print(f"{h['name']}\t{h['category']}\t{h['tags']}")
+    return 0
+
+def cmd_export_hashes(args: argparse.Namespace) -> int:
+    data = get_herb_hashes_for_ledger(args.name.strip(), args.benefit.strip(), args.category.strip())
+    j = json.dumps(data, indent=2)

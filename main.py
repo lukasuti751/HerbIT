@@ -133,3 +133,30 @@ def cmd_lookup(args: argparse.Namespace) -> int:
         results = lookup_by_benefit(args.benefit)
     elif args.category:
         results = lookup_by_category(args.category)
+    else:
+        print("Specify --name, --benefit, or --category", file=sys.stderr)
+        return 1
+    if not results:
+        print("No matches found.", file=sys.stderr)
+        return 1
+    for h in results:
+        print(json.dumps(h, indent=2))
+    return 0
+
+def cmd_list_herbs(args: argparse.Namespace) -> int:
+    for h in list_all_herbs():
+        print(f"{h['name']}\t{h['category']}\t{h['tags']}")
+    return 0
+
+def cmd_list_categories(args: argparse.Namespace) -> int:
+    for c in list_all_categories():
+        print(f"{c['id']}\t{c['label']}\t{c['herbs']}")
+    return 0
+
+def cmd_hash(args: argparse.Namespace) -> int:
+    text = args.text.strip()
+    if not text:
+        print("Provide --text", file=sys.stderr)
+        return 1
+    h = utf8_keccak(text)
+    print(h)

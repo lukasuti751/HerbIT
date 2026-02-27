@@ -106,3 +106,30 @@ def suggest_for_symptom(symptom: str) -> list[dict]:
                 results.append(h)
                 break
     return results
+
+def get_herb_hashes_for_ledger(herb_name: str, benefit: str, category: str) -> dict:
+    return {
+        "nameHash": utf8_keccak(herb_name),
+        "benefitHash": utf8_keccak(benefit),
+        "categoryHash": utf8_keccak(category),
+    }
+
+# Simple remedy ideas (title -> list of herb names). For display only.
+REMEDY_IDEAS = [
+    {"title": "Calming tea blend", "herbs": ["Chamomile", "Lavender", "Lemon balm"]},
+    {"title": "Digestive aid", "herbs": ["Ginger", "Peppermint"]},
+    {"title": "Golden milk", "herbs": ["Turmeric", "Ginger"]},
+    {"title": "Immune support tea", "herbs": ["Echinacea", "Elderberry", "Ginger"]},
+]
+
+# -----------------------------------------------------------------------------
+# CLI HANDLERS
+# -----------------------------------------------------------------------------
+
+def cmd_lookup(args: argparse.Namespace) -> int:
+    if args.name:
+        results = lookup_by_name(args.name)
+    elif args.benefit:
+        results = lookup_by_benefit(args.benefit)
+    elif args.category:
+        results = lookup_by_category(args.category)

@@ -187,3 +187,30 @@ def cmd_config(args: argparse.Namespace) -> int:
     print(json.dumps(cfg, indent=2))
     return 0
 
+def cmd_constants(args: argparse.Namespace) -> int:
+    # Mirrors Herbo.sol constants for reference (do not deploy with these; contract has its own)
+    c = {
+        "HRB_BPS_BASE": 10000,
+        "HRB_MAX_FEE_BPS": 500,
+        "HRB_MAX_ENTRIES": 2500,
+        "HRB_MAX_CATEGORIES": 180,
+        "HRB_MAX_BATCH_LOG": 35,
+        "HRB_MAX_BATCH_CREDIT": 45,
+        "HRB_MAX_REMEDIES": 1200,
+        "HRB_MAX_REMEDY_BATCH": 28,
+        "HRB_MAX_CAMPAIGNS": 95,
+    }
+    print(json.dumps(c, indent=2))
+    return 0
+
+def cmd_stats(args: argparse.Namespace) -> int:
+    by_cat = {}
+    for h in HERBS:
+        by_cat[h["category"]] = by_cat.get(h["category"], 0) + 1
+    print("Herbs:", len(HERBS))
+    print("Categories:", len(CATEGORIES))
+    print("By category:", json.dumps(by_cat, indent=2))
+    return 0
+
+def cmd_demo(args: argparse.Namespace) -> int:
+    print("HerbIT demo — herb guide for natural and healthy living")

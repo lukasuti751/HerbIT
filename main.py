@@ -295,3 +295,30 @@ def cmd_interactive(args: argparse.Namespace) -> int:
 # -----------------------------------------------------------------------------
 
 def main() -> int:
+    p = argparse.ArgumentParser(description="HerbIT — herb guide and Herbo ledger helpers")
+    sub = p.add_subparsers(dest="command", help="Commands")
+
+    lookup_p = sub.add_parser("lookup", help="Lookup herbs by name, benefit or category")
+    lookup_p.add_argument("--name", type=str, help="Herb name (partial match)")
+    lookup_p.add_argument("--benefit", type=str, help="Benefit keyword")
+    lookup_p.add_argument("--category", type=str, help="Category id/label")
+    lookup_p.set_defaults(func=cmd_lookup)
+
+    sub.add_parser("list-herbs", help="List all herbs").set_defaults(func=cmd_list_herbs)
+    sub.add_parser("list-categories", help="List all categories").set_defaults(func=cmd_list_categories)
+
+    hash_p = sub.add_parser("hash", help="Keccak256 hash of text (for ledger)")
+    hash_p.add_argument("--text", type=str, required=True, help="Text to hash")
+    hash_p.set_defaults(func=cmd_hash)
+
+    hb_p = sub.add_parser("hash-batch", help="Hash multiple names/benefits/categories")
+    hb_p.add_argument("--names", type=str, help="Comma-separated names")
+    hb_p.add_argument("--benefits", type=str, help="Comma-separated benefits")
+    hb_p.add_argument("--categories", type=str, help="Comma-separated categories")
+    hb_p.set_defaults(func=cmd_hash_batch)
+
+    sub.add_parser("config", help="Show app config").set_defaults(func=cmd_config)
+    sub.add_parser("constants", help="Show Herbo constant reference").set_defaults(func=cmd_constants)
+    sub.add_parser("stats", help="Herb and category stats").set_defaults(func=cmd_stats)
+    sub.add_parser("demo", help="Run a short demo").set_defaults(func=cmd_demo)
+    sub.add_parser("remedies", help="List remedy ideas (title and herbs)").set_defaults(func=cmd_remedies)

@@ -79,3 +79,30 @@ def utf8_keccak(text: str) -> str:
 # LOOKUP
 # -----------------------------------------------------------------------------
 
+def lookup_by_name(name: str) -> list[dict]:
+    name_lower = name.strip().lower()
+    return [h for h in HERBS if name_lower in h["name"].lower()]
+
+def lookup_by_benefit(benefit: str) -> list[dict]:
+    benefit_lower = benefit.strip().lower()
+    return [h for h in HERBS if any(benefit_lower in b.lower() for b in h["benefits"])]
+
+def lookup_by_category(cat: str) -> list[dict]:
+    cat_lower = cat.strip().lower()
+    return [h for h in HERBS if cat_lower in h["category"].lower()]
+
+def list_all_herbs() -> list[dict]:
+    return HERBS
+
+def list_all_categories() -> list[dict]:
+    return CATEGORIES
+
+def suggest_for_symptom(symptom: str) -> list[dict]:
+    symptom_lower = symptom.strip().lower()
+    results = []
+    for h in HERBS:
+        for b in h["benefits"]:
+            if symptom_lower in b or symptom_lower in h["name"].lower() or symptom_lower in h["category"].lower():
+                results.append(h)
+                break
+    return results
